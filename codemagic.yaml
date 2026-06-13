@@ -1,0 +1,26 @@
+workflows:
+  sequoia-browser-android:
+    name: 红杉浏览器APK构建
+    max_build_duration: 20
+    instance_type: mac_mini_m1
+    environment:
+      flutter: 3.22.0
+      vars:
+        PUB_HOSTED_URL: "https://pub.flutter-io.cn"
+        FLUTTER_STORAGE_BASE_URL: "https://storage.flutter-io.cn"
+    scripts:
+      - name: 配置国内镜像并安装依赖
+        script: |
+          export PUB_HOSTED_URL=https://pub.flutter-io.cn
+          export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+          flutter config --no-analytics
+          flutter pub get --verbose
+      
+      - name: 构建APK
+        script: |
+          export PUB_HOSTED_URL=https://pub.flutter-io.cn
+          export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
+          flutter build apk --release --no-tree-shake-icons --no-shrink
+    
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
